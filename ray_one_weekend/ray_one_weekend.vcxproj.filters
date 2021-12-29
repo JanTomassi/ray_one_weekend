@@ -45,12 +45,15 @@
     <ClInclude Include="src\defuse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\inf_plane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\hittable.cpp">
+    <ClCompile Include="src\vec3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

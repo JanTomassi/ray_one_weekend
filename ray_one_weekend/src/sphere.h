@@ -1,12 +1,11 @@
-#ifndef SPHERE_H
-#define SPHERE_H
+#pragma once
 
-#include "hittable.h"
 #include "vec3.h"
+#include "hittable.h"
 
 class sphere : public hittable {
 public:
-    sphere() {}
+    sphere() {};
     sphere(point3 cen, double r, shared_ptr<material> m) : center(cen), radius(r), mat_ptr(m) {};
 
     virtual bool hit(
@@ -44,5 +43,3 @@ bool sphere::hit(const ray& r, double t_min, double t_max, hit_record& rec) cons
 
     return true;
 }
-
-#endif

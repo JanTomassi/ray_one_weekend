@@ -171,10 +171,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\hittable.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\vec3.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\inf_plane.h" />
     <ClInclude Include="src\defuse.h" />
     <ClInclude Include="src\material.h" />
     <ClInclude Include="src\camera.h" />

@@ -5,12 +5,12 @@
 #include<iostream>
 #include "rtweek.h"
 
-#include "color.h"
-#include "hittable_list.h"
-#include "sphere.h"
-#include "camera.h"
 #include "vec3.h"
+#include "ray.h"
+#include "color.h"
+#include "camera.h"
 #include "material.h"
+#include "hittable_list.h"
 
 using namespace std;
 using namespace cv;
@@ -64,17 +64,17 @@ void render(Mat image) {
 
 	//Texture
 	auto material_center = make_shared<defuse>(color(1, 1, 1));
-	auto material_ground = make_shared<defuse>(color(0.7, 0.3, 0.3));
+	auto material_ground = make_shared<defuse>(color(0.1, 0.1, 0.1));
 
 	//Object
 	hittable_list world;
-	world.add(make_shared<sphere>(point3(-0.55, 0.125 / 4, -1), 0.25, material_center));
-	world.add(make_shared<sphere>(point3(0, 0.125 / 4, -1), 0.25, material_center));
-	world.add(make_shared<sphere>(point3(0.55, 0.125 / 4, -1), 0.25, material_center));
-	world.add(make_shared<sphere>(point3(0, -100.25, -1), 100, material_ground));
+	world.add(make_shared<sphere>(point3(-0.55, 0, -1), 0.25, material_center));
+	world.add(make_shared<sphere>(point3(0, 0, -1), 0.25, material_center));
+	world.add(make_shared<sphere>(point3(0.55, 0, -1), 0.25, material_center));
+	world.add(make_shared<inf_plane>(point3(0, -0.33, 0), vec3(0, 1, 0), material_ground));
 
 	// Camera
-	mycamera cam;
+	mycamera cam(point3(0, 0, 0));
 
 	//Render
 	int pos = 0;
