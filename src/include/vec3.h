@@ -82,7 +82,7 @@ inline vec3 operator/(vec3 v, double t) {
 	return (1 / t) * v;
 }
 
-extern inline double dot(const vec3& u, const vec3& v);
-extern inline vec3 cross(const vec3& u, const vec3& v);
-extern inline vec3 unit_vector(vec3 v);
-extern vec3 random_in_unit_sphere();
+double dot(const vec3& u, const vec3& v);
+inline vec3 cross(const vec3& u, const vec3& v);
+inline vec3 unit_vector(vec3 v);
+vec3 random_in_unit_sphere();

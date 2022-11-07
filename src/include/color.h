@@ -2,7 +2,6 @@
 
 #include<opencv2/opencv.hpp>
 #include "vec3.h"
-using namespace std;
 
 void changePixelColor(cv::Vec3d& pixel, color colors, int samples_per_pixel) {
 	auto r = colors.x();

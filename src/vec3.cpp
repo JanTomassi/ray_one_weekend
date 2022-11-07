@@ -1,7 +1,5 @@
 #include "vec3.h"
 
-
-
 inline double vec3::length() const {
 	return sqrt(length_squared());
 }
@@ -18,7 +16,7 @@ inline vec3 vec3::random(double min, double max) {
 	return vec3(random_double(min, max), random_double(min, max), random_double(min, max));
 }
 
-inline double dot(const vec3& u, const vec3& v) {
+double dot(const vec3& u, const vec3& v) {
 	return u.e[0] * v.e[0]
 		+ u.e[1] * v.e[1]
 		+ u.e[2] * v.e[2];
