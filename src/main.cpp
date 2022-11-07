@@ -35,7 +35,7 @@ inline color ray_color(const ray &r, const hittable &world, int depth)
 		return color(0, 0, 0);
 	}
 
-	vec3 unit_direction = unit_vector(r.direction());
+	vec3 unit_direction = vec3::unit_vector(r.direction());
 	auto hight = 0.5 * (unit_direction.y() + 1.0);
 	return (1.0 - hight) * color(1.0, 1.0, 1.0) + hight * color(0.5, 0.7, 1.0);
 }

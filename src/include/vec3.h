@@ -46,6 +46,11 @@ public:
 	static vec3 random();
 	static vec3 random(double min, double max);
 
+	static double dot(const vec3 &u, const vec3 &v);
+	static vec3 cross(const vec3 &u, const vec3 &v);
+	static vec3 unit_vector(vec3 v);
+	static vec3 random_in_unit_sphere();
+
 public:
 	double e[3];
 };
@@ -90,8 +95,3 @@ inline vec3 operator/(vec3 v, double t)
 {
 	return (1 / t) * v;
 }
-
-double dot(const vec3 &u, const vec3 &v);
-vec3 cross(const vec3 &u, const vec3 &v);
-vec3 unit_vector(vec3 v);
-vec3 random_in_unit_sphere();
