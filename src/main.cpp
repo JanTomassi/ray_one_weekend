@@ -3,6 +3,10 @@
 
 #include <opencv2/opencv.hpp>
 #include <iostream>
+#include <atomic>
+#include <thread>
+#include <mutex>
+#include <string>
 #include "rtweek.h"
 
 #include "vec3.h"
@@ -12,10 +16,19 @@
 #include "material.h"
 #include "hittable_list.h"
 
-cv::String windowName = "Ray Tracing";
 void cWindow(cv::String windowName);
-void render(cv::Mat &image);
+void render();
+void renderLoop(int name);
 void dWindow(cv::String windowName);
+
+cv::String windowName = "Ray Tracing";
+cv::Mat img(image_height, image_width, CV_64FC3, cv::Scalar(0, 0, 0));
+mycamera cam(point3(0, 0, 0));
+hittable_list world;
+std::atomic_int sampleN;
+int thread;
+int samples_per_pixel;
+int printN;
 
 inline color ray_color(const ray &r, const hittable &world, int depth)
 {
@@ -42,45 +55,58 @@ inline color ray_color(const ray &r, const hittable &world, int depth)
 
 int main(int argc, char **argv)
 {
-
+	thread = std::atoi(argv[1]);
+	printN = std::atoi(argv[3]);
+	samples_per_pixel = std::atoi(argv[2]);
 	cWindow(windowName);
 
-	cv::Mat img(image_height, image_width, CV_64FC3, cv::Scalar(0, 0, 0));
-
-	render(img);
+	sampleN = 0;
+	render();
 
 	cv::imshow(windowName, img / samples_per_pixel); // Show our image inside the created window.
-
 	dWindow(windowName);
-
 	return 0;
 }
 
-void render(cv::Mat &image)
+void render()
 {
-
-	// World
 
 	// Texture
 	auto material_center = make_shared<defuse>(color(1, 1, 1));
 	auto material_ground = make_shared<defuse>(color(0.1, 0.1, 0.1));
 
 	// Object
-	hittable_list world;
 	world.add(make_shared<sphere>(point3(-0.55, 0, -1), 0.25, material_center));
 	world.add(make_shared<sphere>(point3(0, 0, -1), 0.25, material_center));
 	world.add(make_shared<sphere>(point3(0.55, 0, -1), 0.25, material_center));
 	world.add(make_shared<inf_plane>(point3(0, -0.33, 0), vec3(0, 1, 0), material_ground));
 
-	// Camera
-	mycamera cam(point3(0, 0, 0));
-
-	// Render
-	int pos = 0;
-	for (int s = 0; s < samples_per_pixel; s++)
+	if (thread)
 	{
-		++pos;
-		std::cout << "\rRemaining: " << ((double)pos / (samples_per_pixel)) * 100 << "      " << std::flush;
+		std::vector<std::thread> workingThread;
+		for (int i = 1; i <= thread; i++)
+		{
+			workingThread.push_back(std::thread(renderLoop, i));
+		}
+		for (int i = 0; i < thread; i++)
+		{
+			workingThread[i].join();
+		}
+	}
+	else
+	{
+		std::thread t1(renderLoop, 1);
+		t1.join();
+	}
+}
+
+std::mutex m_image;
+void renderLoop(int name)
+{
+	thread_local cv::Mat t_img(image_height, image_width, CV_64FC3, cv::Scalar(0, 0, 0));
+
+	while (sampleN < samples_per_pixel)
+	{
 		for (int i = 0; i < image_height; ++i)
 		{
 			for (int j = 0; j < image_width; ++j)
@@ -90,13 +116,18 @@ void render(cv::Mat &image)
 				ray r = cam.get_ray(u, v);
 
 				color pixel_color = ray_color(r, world, max_depth);
-				cv::Vec3d &point = image.at<cv::Vec3d>(i, j);
+				cv::Vec3d &point = t_img.at<cv::Vec3d>(i, j);
 
-				addPixelColor(point, pixel_color, 1);
+				changePixelColor(point, pixel_color, 1);
 			}
 		}
-		cv::imshow(windowName, image / s);
-		cv::waitKey(1);
+
+		m_image.lock();
+		img += t_img;
+		++sampleN;
+		if (!(sampleN % printN))
+			std::cout << "\nRemaining time for " << name << ": " << sampleN << '/' << samples_per_pixel << "      " << std::flush;
+		m_image.unlock();
 	}
 }
 
@@ -108,6 +139,7 @@ void cWindow(cv::String windowName)
 void dWindow(cv::String windowName)
 {
 	char k;
-	while (cv::waitKey(0) != ' ');
+	while (cv::waitKey(0) != ' ')
+		;
 	cv::destroyWindow(windowName); // destroy the created window
 }
