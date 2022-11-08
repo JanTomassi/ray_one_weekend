@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.6)
 project( DisplayImage )
-add_definitions("-std=c++11 -g")
+add_definitions("-std=c++11 -g -O3")
 set(CMAKE_EXPORT_COMPILE_COMMANDS true)
 
 set(HEADER_DIR src/include)
