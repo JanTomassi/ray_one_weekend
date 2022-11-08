@@ -30,27 +30,27 @@ int thread;
 int samples_per_pixel;
 int printN;
 
-inline color ray_color(const ray &r, const hittable &world, int depth)
+inline cv::Vec3d ray_color(const ray &r, const hittable &world, int depth)
 {
 	hit_record rec;
 
 	if (depth <= 0)
 	{
-		return color(0, 0, 0);
+		return cv::Vec3d(0, 0, 0);
 	}
 
 	if (world.hit(r, 0.0001, infinity, rec))
 	{
 		ray scattered;
-		color attenuation;
+		cv::Vec3d attenuation;
 		if (rec.mat_ptr->scatter(r, rec, attenuation, scattered))
-			return attenuation * ray_color(scattered, world, depth - 1);
-		return color(0, 0, 0);
+			return attenuation.mul(ray_color(scattered, world, depth - 1));
+		return cv::Vec3d(0, 0, 0);
 	}
 
 	vec3 unit_direction = vec3::unit_vector(r.direction());
 	auto hight = 0.5 * (unit_direction.y() + 1.0);
-	return (1.0 - hight) * color(1.0, 1.0, 1.0) + hight * color(0.5, 0.7, 1.0);
+	return (1.0 - hight) * cv::Vec3d(1.0, 1.0, 1.0) + hight * cv::Vec3d(0.5, 0.7, 1.0);
 }
 
 int main(int argc, char **argv)
@@ -72,8 +72,8 @@ void render()
 {
 
 	// Texture
-	auto material_center = make_shared<defuse>(color(1, 1, 1));
-	auto material_ground = make_shared<defuse>(color(0.1, 0.1, 0.1));
+	auto material_center = make_shared<defuse>(cv::Vec3d(1, 1, 1));
+	auto material_ground = make_shared<defuse>(cv::Vec3d(0.1, 0.1, 0.1));
 
 	// Object
 	world.add(make_shared<sphere>(point3(-0.55, 0, -1), 0.25, material_center));
@@ -115,7 +115,7 @@ void renderLoop(int name)
 				auto v = (i + random_double()) / (image_height - 1);
 				ray r = cam.get_ray(u, v);
 
-				color pixel_color = ray_color(r, world, max_depth);
+				cv::Vec3d pixel_color = ray_color(r, world, max_depth);
 				cv::Vec3d &point = t_img.at<cv::Vec3d>(i, j);
 
 				changePixelColor(point, pixel_color, 1);

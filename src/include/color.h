@@ -1,18 +1,19 @@
 #pragma once
 
-#include<opencv2/opencv.hpp>
+#include <opencv2/opencv.hpp>
 #include "vec3.h"
 
-void changePixelColor(cv::Vec3d& pixel, color colors, int samples_per_pixel) {
-	auto r = colors.x();
-	auto g = colors.y();
-	auto b = colors.z();
+void changePixelColor(cv::Vec3d &pixel, cv::Vec3d &colors, int samples_per_pixel)
+{
+	auto r = colors[0];
+	auto g = colors[1];
+	auto b = colors[2];
 
 	// Divide the color by the number of samples.
 	auto scale = 1.0 / samples_per_pixel;
-	r = sqrt(scale*r);
-	g = sqrt(scale*g);
-	b = sqrt(scale*b);
+	r = sqrt(scale * r);
+	g = sqrt(scale * g);
+	b = sqrt(scale * b);
 
 	// Write the translated [0,255] value of each color component.
 	pixel[2] = static_cast<double>(clamp(r, 0.0, 0.999));
@@ -20,10 +21,11 @@ void changePixelColor(cv::Vec3d& pixel, color colors, int samples_per_pixel) {
 	pixel[0] = static_cast<double>(clamp(b, 0.0, 0.999));
 }
 
-void addPixelColor(cv::Vec3d& pixel, color colors, int samples_per_pixel) {
-	auto r = colors.x();
-	auto g = colors.y();
-	auto b = colors.z();
+void addPixelColor(cv::Vec3d &pixel, cv::Vec3d &colors, int samples_per_pixel)
+{
+	auto r = colors[0];
+	auto g = colors[1];
+	auto b = colors[2];
 
 	// Divide the color by the number of samples.
 	r = sqrt(r);
