@@ -1,6 +1,7 @@
 #ifndef RAY_H
 #define RAY_H
 
+#include <opencv2/opencv.hpp>
 #include "vec3.h"
 
 class ray {
@@ -12,6 +13,7 @@ public:
 
     inline point3 origin() const { return orig; }
     inline vec3 direction() const { return dir; }
+    inline cv::Vec3d directionOPEN() const { return cv::Vec3d(dir.x(),dir.y(),dir.z()); }
 
     point3 at(double t) const {
         return orig + t * dir;

@@ -47,9 +47,8 @@ inline cv::Vec3d ray_color(const ray &r, const hittable &world, int depth)
 			return attenuation.mul(ray_color(scattered, world, depth - 1));
 		return cv::Vec3d(0, 0, 0);
 	}
-
-	vec3 unit_direction = vec3::unit_vector(r.direction());
-	auto hight = 0.5 * (unit_direction.y() + 1.0);
+	cv::Vec3d unit_direction = cv::normalize(r.directionOPEN());
+	auto hight = 0.5 * (unit_direction[1] + 1.0);
 	return (1.0 - hight) * cv::Vec3d(1.0, 1.0, 1.0) + hight * cv::Vec3d(0.5, 0.7, 1.0);
 }
 
@@ -76,10 +75,10 @@ void render()
 	auto material_ground = make_shared<defuse>(cv::Vec3d(0.1, 0.1, 0.1));
 
 	// Object
-	world.add(make_shared<sphere>(point3(-0.55, 0, -1), 0.25, material_center));
-	world.add(make_shared<sphere>(point3(0, 0, -1), 0.25, material_center));
-	world.add(make_shared<sphere>(point3(0.55, 0, -1), 0.25, material_center));
-	world.add(make_shared<inf_plane>(point3(0, -0.33, 0), vec3(0, 1, 0), material_ground));
+	world.add(make_shared<sphere>(cv::Vec3d(-0.55, 0, -1), 0.25, material_center));
+	world.add(make_shared<sphere>(cv::Vec3d(0, 0, -1), 0.25, material_center));
+	world.add(make_shared<sphere>(cv::Vec3d(0.55, 0, -1), 0.25, material_center));
+	world.add(make_shared<inf_plane>(cv::Vec3d(0, -0.25, 0), cv::Vec3d(0, 1, 0), material_ground));
 
 	if (thread)
 	{
@@ -118,7 +117,7 @@ void renderLoop(int name)
 				cv::Vec3d pixel_color = ray_color(r, world, max_depth);
 				cv::Vec3d &point = t_img.at<cv::Vec3d>(i, j);
 
-				changePixelColor(point, pixel_color, 1);
+				changePixelColor(point, pixel_color);
 			}
 		}
 
@@ -126,7 +125,7 @@ void renderLoop(int name)
 		img += t_img;
 		++sampleN;
 		if (!(sampleN % printN))
-			std::cout << "\nRemaining time for " << name << ": " << sampleN << '/' << samples_per_pixel << "      " << std::flush;
+			std::cout << "\nRemaining time for " << name << ": " << sampleN << '/' << samples_per_pixel << "\t" << std::flush;
 		m_image.unlock();
 	}
 }

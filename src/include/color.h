@@ -3,17 +3,15 @@
 #include <opencv2/opencv.hpp>
 #include "vec3.h"
 
-void changePixelColor(cv::Vec3d &pixel, cv::Vec3d &colors, int samples_per_pixel)
+void changePixelColor(cv::Vec3d &pixel, cv::Vec3d &colors)
 {
 	auto r = colors[0];
 	auto g = colors[1];
-	auto b = colors[2];
-
-	// Divide the color by the number of samples.
-	auto scale = 1.0 / samples_per_pixel;
-	r = sqrt(scale * r);
-	g = sqrt(scale * g);
-	b = sqrt(scale * b);
+	auto b = colors[2];	
+	
+	r = sqrt(r);
+	g = sqrt(g);
+	b = sqrt(b);
 
 	// Write the translated [0,255] value of each color component.
 	pixel[2] = static_cast<double>(clamp(r, 0.0, 0.999));
