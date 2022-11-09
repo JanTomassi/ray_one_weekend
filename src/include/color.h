@@ -7,8 +7,8 @@ void changePixelColor(cv::Vec3d &pixel, cv::Vec3d &colors)
 {
 	auto r = colors[0];
 	auto g = colors[1];
-	auto b = colors[2];	
-	
+	auto b = colors[2];
+
 	r = sqrt(r);
 	g = sqrt(g);
 	b = sqrt(b);

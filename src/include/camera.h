@@ -4,7 +4,8 @@
 class mycamera
 {
 public:
-	mycamera() {
+	mycamera()
+	{
 		auto viewport_height = 1.0;
 		auto viewport_width = aspect_ratio * viewport_height;
 		auto focal_length = 1.0;
@@ -15,7 +16,8 @@ public:
 		upper_left_corner = origin - horizontal / 2 + vertical / 2 - vec3(0, 0, focal_length);
 	}
 
-	mycamera(point3 orig) {
+	mycamera(point3 orig)
+	{
 		auto viewport_height = 1.0;
 		auto viewport_width = aspect_ratio * viewport_height;
 		auto focal_length = 0.75;
@@ -26,7 +28,8 @@ public:
 		upper_left_corner = origin - horizontal / 2 + vertical / 2 - vec3(0, 0, focal_length);
 	}
 
-	ray get_ray(double u, double v) {
+	ray get_ray(double u, double v)
+	{
 		return ray(origin, upper_left_corner + u * horizontal - v * vertical);
 	}
 
@@ -36,4 +39,3 @@ private:
 	vec3 horizontal;
 	vec3 vertical;
 };
-
