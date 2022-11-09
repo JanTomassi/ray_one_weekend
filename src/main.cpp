@@ -1,12 +1,10 @@
-// Uncomment the following line if you are compiling this code in Visual Studio
-//#include "stdafx.h"
-
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include <atomic>
 #include <thread>
 #include <mutex>
 #include <string>
+#include <glm/glm.hpp>
 #include "rtweek.h"
 
 #include "vec3.h"
@@ -25,7 +23,6 @@ cv::String windowName = "Ray Tracing";
 cv::Mat img(image_height, image_width, CV_64FC3, cv::Scalar(0, 0, 0));
 mycamera cam(point3(0, 0, 0));
 hittable_list world;
-std::atomic_int sampleN;
 int thread;
 int samples_per_pixel;
 int printN;
@@ -59,10 +56,9 @@ int main(int argc, char **argv)
 	samples_per_pixel = std::atoi(argv[2]);
 	cWindow(windowName);
 
-	sampleN = 0;
 	render();
 
-	cv::imshow(windowName, img / samples_per_pixel); // Show our image inside the created window.
+	cv::imshow(windowName, img / (samples_per_pixel * thread)); // Show our image inside the created window.
 	dWindow(windowName);
 	return 0;
 }
@@ -78,7 +74,7 @@ void render()
 	world.add(make_shared<sphere>(cv::Vec3d(-0.55, 0, -1), 0.25, material_center));
 	world.add(make_shared<sphere>(cv::Vec3d(0, 0, -1), 0.25, material_center));
 	world.add(make_shared<sphere>(cv::Vec3d(0.55, 0, -1), 0.25, material_center));
-	world.add(make_shared<inf_plane>(cv::Vec3d(0, -0.25, 0), cv::Vec3d(0, 1, 0), material_ground));
+	world.add(make_shared<sphere>(cv::Vec3d(0, -100.25, 0), 100, material_center));
 
 	if (thread)
 	{
@@ -103,8 +99,9 @@ std::mutex m_image;
 void renderLoop(int name)
 {
 	thread_local cv::Mat t_img(image_height, image_width, CV_64FC3, cv::Scalar(0, 0, 0));
+	thread_local int sampleN = 0;
 
-	while (sampleN < samples_per_pixel)
+	while (sampleN++ < samples_per_pixel)
 	{
 		for (int i = 0; i < image_height; ++i)
 		{
@@ -117,17 +114,15 @@ void renderLoop(int name)
 				cv::Vec3d pixel_color = ray_color(r, world, max_depth);
 				cv::Vec3d &point = t_img.at<cv::Vec3d>(i, j);
 
-				changePixelColor(point, pixel_color);
+				addPixelColor(point, pixel_color);
 			}
 		}
-
-		m_image.lock();
-		img += t_img;
-		++sampleN;
 		if (!(sampleN % printN))
 			std::cout << "\nRemaining time for " << name << ": " << sampleN << '/' << samples_per_pixel << "\t" << std::flush;
-		m_image.unlock();
 	}
+	m_image.lock();
+	img += t_img;
+	m_image.unlock();
 }
 
 void cWindow(cv::String windowName)

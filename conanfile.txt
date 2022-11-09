@@ -1,5 +1,6 @@
  [requires]
  opencv/4.5.3
+ glm/cci.20220420
 
  [generators]
  cmake
