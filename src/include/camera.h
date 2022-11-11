@@ -11,9 +11,6 @@ public:
 		auto focal_length = 1.0;
 
 		origin = point3(0, 0, 0);
-		horizontal = vec3(viewport_width, 0, 0);
-		vertical = vec3(0, viewport_height, 0);
-		upper_left_corner = origin - horizontal / 2 + vertical / 2 - vec3(0, 0, focal_length);
 	}
 
 	mycamera(point3 orig)
@@ -23,19 +20,19 @@ public:
 		auto focal_length = 0.75;
 
 		origin = orig;
-		horizontal = vec3(viewport_width, 0, 0);
-		vertical = vec3(0, viewport_height, 0);
-		upper_left_corner = origin - horizontal / 2 + vertical / 2 - vec3(0, 0, focal_length);
 	}
 
 	ray get_ray(double u, double v)
 	{
-		return ray(origin, upper_left_corner + u * horizontal - v * vertical);
+		cv::Mat1d dir = (intrinsicMatrix * cv::Vec3d(u, v, 1));
+		return ray(origin, vec3(dir(0), dir(1), dir(2)));
 	}
 
 private:
 	point3 origin;
-	point3 upper_left_corner;
-	vec3 horizontal;
-	vec3 vertical;
+
+	double m[3][3] = {{-1.0 / 480, 0, (0.5 * (640.0 / 480))},
+					  {0, -1.0 / 480, (0.5 * (480.0 / 480))},
+					  {0, 0, -1}};
+	cv::Mat_<double> intrinsicMatrix = cv::Mat(3, 3, CV_64F, m);
 };

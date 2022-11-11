@@ -23,6 +23,7 @@ cv::String windowName = "Ray Tracing";
 cv::Mat img(image_height, image_width, CV_64FC3, cv::Scalar(0, 0, 0));
 mycamera cam(point3(0, 0, 0));
 hittable_list world;
+
 int thread;
 int samples_per_pixel;
 int printN;
@@ -107,8 +108,8 @@ void renderLoop(int name)
 		{
 			for (int j = 0; j < image_width; ++j)
 			{
-				auto u = (j + random_double()) / (image_width - 1);
-				auto v = (i + random_double()) / (image_height - 1);
+				auto u = (j + random_double());
+				auto v = (i + random_double());
 				ray r = cam.get_ray(u, v);
 
 				cv::Vec3d pixel_color = ray_color(r, world, max_depth);
