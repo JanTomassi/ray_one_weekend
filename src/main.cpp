@@ -14,6 +14,10 @@
 #include "material.h"
 #include "hittable_list.h"
 
+#include "triangle.h"
+#include "sphere.h"
+#include "inf_plane.h"
+
 void cWindow(cv::String windowName);
 void render();
 void renderLoop(int name);
@@ -68,14 +72,17 @@ void render()
 {
 
 	// Texture
-	auto material_center = make_shared<defuse>(cv::Vec3d(1, 1, 1));
+	auto material_center1 = make_shared<defuse>(cv::Vec3d(1, 0, 0));
+	auto material_center2 = make_shared<defuse>(cv::Vec3d(0, 1, 0));
+	auto material_center3 = make_shared<defuse>(cv::Vec3d(0, 0, 1));
 	auto material_ground = make_shared<defuse>(cv::Vec3d(0.1, 0.1, 0.1));
 
 	// Object
-	world.add(make_shared<sphere>(cv::Vec3d(-0.55, 0, -1), 0.25, material_center));
-	world.add(make_shared<sphere>(cv::Vec3d(0, 0, -1), 0.25, material_center));
-	world.add(make_shared<sphere>(cv::Vec3d(0.55, 0, -1), 0.25, material_center));
-	world.add(make_shared<sphere>(cv::Vec3d(0, -100.25, 0), 100, material_center));
+	world.add(make_shared<sphere>(cv::Vec3d(0, -1000.5, 0), 1000, material_ground));
+	world.add(make_shared<sphere>(cv::Vec3d(0.5, 0, -1), 0.01, material_center1));
+	world.add(make_shared<sphere>(cv::Vec3d(-0.5, 0, -1), 0.01, material_center2));
+	world.add(make_shared<sphere>(cv::Vec3d(1, 0.5, -5), 0.01, material_center3));
+	world.add(make_shared<triangle>(cv::Vec3f(0.5, 0, 1), cv::Vec3f(-0.5, 0, 1), cv::Vec3f(0, 0.5, -5), material_ground));
 
 	if (thread)
 	{
