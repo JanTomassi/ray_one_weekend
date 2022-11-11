@@ -19,7 +19,7 @@ void changePixelColor(cv::Vec3d &pixel, cv::Vec3d &colors)
 	pixel[0] = static_cast<double>(clamp(b, 0.0, 0.999));
 }
 
-void addPixelColor(cv::Vec3d &pixel, cv::Vec3d &colors, int samples_per_pixel)
+void addPixelColor(cv::Vec3d &pixel, cv::Vec3d &colors)
 {
 	auto r = colors[0];
 	auto g = colors[1];
