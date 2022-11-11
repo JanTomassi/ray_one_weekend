@@ -7,7 +7,7 @@
 class triangle : public hittable
 {
 public:
-    triangle::triangle(cv::Vec3f v0, cv::Vec3f v1, cv::Vec3f v2, shared_ptr<material> m);
+    triangle(cv::Vec3f v0, cv::Vec3f v1, cv::Vec3f v2, shared_ptr<material> m);
 
     virtual bool hit(const ray &r, double t_min, double t_max, hit_record &rec) const override;
 
