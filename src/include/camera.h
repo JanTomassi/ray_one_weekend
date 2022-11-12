@@ -31,8 +31,8 @@ public:
 private:
 	point3 origin;
 
-	double m[3][3] = {{-1.0 / 480, 0, (0.5 * (640.0 / 480))},
-					  {0, -1.0 / 480, (0.5 * (480.0 / 480))},
+	double m[3][3] = {{-1.0 / image_height, 0, (0.5 * (static_cast<double>(image_width) / image_height))},
+					  {0, -1.0 / image_height, (0.5 * (static_cast<double>(image_height) / image_height))},
 					  {0, 0, -1}};
 	cv::Mat_<double> intrinsicMatrix = cv::Mat(3, 3, CV_64F, m);
 };
