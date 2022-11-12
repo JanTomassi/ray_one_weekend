@@ -21,6 +21,7 @@ set(SOURCES ${SRC_DIR}/vec3.cpp
 	${HEADER_DIR}/sphere.h
 	${HEADER_DIR}/vec3.h
 	${HEADER_DIR}/triangle.h
+	${HEADER_DIR}/defuse_light.h
 	)
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)

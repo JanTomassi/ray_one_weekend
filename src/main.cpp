@@ -12,6 +12,7 @@
 #include "color.h"
 #include "camera.h"
 #include "material.h"
+#include "defuse_light.h"
 #include "hittable_list.h"
 
 #include "triangle.h"
@@ -41,17 +42,21 @@ inline cv::Vec3d ray_color(const ray &r, const hittable &world, int depth)
 		return cv::Vec3d(0, 0, 0);
 	}
 
-	if (world.hit(r, 0.0001, infinity, rec))
-	{
-		ray scattered;
-		cv::Vec3d attenuation;
-		if (rec.mat_ptr->scatter(r, rec, attenuation, scattered))
-			return attenuation.mul(ray_color(scattered, world, depth - 1));
+	if (!world.hit(r, 0.0001, infinity, rec))
 		return cv::Vec3d(0, 0, 0);
-	}
-	cv::Vec3d unit_direction = cv::normalize(r.directionOPEN());
-	auto hight = 0.5 * (unit_direction[1] + 1.0);
-	return (1.0 - hight) * cv::Vec3d(1.0, 1.0, 1.0) + hight * cv::Vec3d(0.5, 0.7, 1.0);
+
+	ray scattered;
+	cv::Vec3d attenuation;
+	cv::Vec3d emitted = rec.mat_ptr->emitted();
+
+	if (!rec.mat_ptr->scatter(r, rec, attenuation, scattered))
+		return emitted;
+
+	return emitted + attenuation.mul(ray_color(scattered, world, depth - 1));
+
+	// cv::Vec3d unit_direction = cv::normalize(r.directionOPEN());
+	// auto hight = 0.5 * (unit_direction[1] + 1.0);
+	// return (1.0 - hight) * cv::Vec3d(1.0, 1.0, 1.0) + hight * cv::Vec3d(0.5, 0.7, 1.0);
 }
 
 int main(int argc, char **argv)
@@ -63,8 +68,11 @@ int main(int argc, char **argv)
 
 	render();
 
-	cv::imshow(windowName, img / (samples_per_pixel * thread)); // Show our image inside the created window.
-	dWindow(windowName);
+	// cv::imshow(windowName, img / (samples_per_pixel * thread)); // Show our image inside the created window.
+
+	cv::imwrite("render.png", img / (samples_per_pixel * thread) * 255);
+
+	// dWindow(windowName);
 	return 0;
 }
 
@@ -75,14 +83,16 @@ void render()
 	auto material_center1 = make_shared<defuse>(cv::Vec3d(1, 0, 0));
 	auto material_center2 = make_shared<defuse>(cv::Vec3d(0, 1, 0));
 	auto material_center3 = make_shared<defuse>(cv::Vec3d(0, 0, 1));
-	auto material_ground = make_shared<defuse>(cv::Vec3d(0.1, 0.1, 0.1));
+	auto material_center4 = make_shared<defuse>(cv::Vec3d(0.1, 0.1, 0.1));
+	auto material_ground = make_shared<defuse_light>(cv::Vec3d(1, 0.75, 0.75) * 10);
 
 	// Object
-	world.add(make_shared<sphere>(cv::Vec3d(0, -1000.5, 0), 1000, material_ground));
-	world.add(make_shared<sphere>(cv::Vec3d(0.5, 0, -1), 0.01, material_center1));
-	world.add(make_shared<sphere>(cv::Vec3d(-0.5, 0, -1), 0.01, material_center2));
-	world.add(make_shared<sphere>(cv::Vec3d(1, 0.5, -5), 0.01, material_center3));
-	world.add(make_shared<triangle>(cv::Vec3f(0.5, 0, 1), cv::Vec3f(-0.5, 0, 1), cv::Vec3f(0, 0.5, -5), material_ground));
+	world.add(make_shared<sphere>(cv::Vec3d(0, -1000.25, 0), 1000, material_center4));
+
+	world.add(make_shared<sphere>(cv::Vec3d(0.25, 0, -1), 0.10, material_ground));
+	world.add(make_shared<sphere>(cv::Vec3d(-0.25, 0, -1), 0.24, material_center2));
+	// world.add(make_shared<sphere>(cv::Vec3d(1, 0.5, -5), 0.01, material_center3));
+	// world.add(make_shared<triangle>(cv::Vec3f(0.5, 0, 1), cv::Vec3f(-0.5, 0, 1), cv::Vec3f(0, 0.5, -5), material_ground));
 
 	if (thread)
 	{

@@ -14,9 +14,9 @@ void changePixelColor(cv::Vec3d &pixel, cv::Vec3d &colors)
 	b = sqrt(b);
 
 	// Write the translated [0,255] value of each color component.
-	pixel[2] = static_cast<double>(clamp(r, 0.0, 0.999));
-	pixel[1] = static_cast<double>(clamp(g, 0.0, 0.999));
-	pixel[0] = static_cast<double>(clamp(b, 0.0, 0.999));
+	pixel[2] = static_cast<double>(r);
+	pixel[1] = static_cast<double>(g);
+	pixel[0] = static_cast<double>(b);
 }
 
 void addPixelColor(cv::Vec3d &pixel, cv::Vec3d &colors)
@@ -31,7 +31,7 @@ void addPixelColor(cv::Vec3d &pixel, cv::Vec3d &colors)
 	b = sqrt(b);
 
 	// Write the translated [0,255] value of each color component.
-	pixel[2] += static_cast<double>(clamp(r, 0.0, 0.999));
-	pixel[1] += static_cast<double>(clamp(g, 0.0, 0.999));
-	pixel[0] += static_cast<double>(clamp(b, 0.0, 0.999));
+	pixel[2] += static_cast<double>(r);
+	pixel[1] += static_cast<double>(g);
+	pixel[0] += static_cast<double>(b);
 }

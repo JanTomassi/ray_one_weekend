@@ -19,9 +19,9 @@ const double pi = 3.1415926535897932385;
 
 // Image
 const auto aspect_ratio = 4.0 / 3.0;
-const int image_width = 640;
+const int image_width = 640 * 3;
 const int image_height = static_cast<int>(image_width / aspect_ratio);
-const int max_depth = 8;
+const int max_depth = 128;
 
 // Utility Functions
 
