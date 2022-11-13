@@ -70,7 +70,17 @@ int main(int argc, char **argv)
 
 	// cv::imshow(windowName, img / (samples_per_pixel * thread)); // Show our image inside the created window.
 
-	cv::imwrite("render.png", img / (samples_per_pixel * thread) * 255);
+	img.convertTo(img, CV_8U, 255 / ((float)samples_per_pixel * thread), 0);
+
+	cv::Mat lookUpTable(1, 256, CV_8U);
+	uchar *p = lookUpTable.ptr();
+	for (int i = 0; i < 256; ++i)
+		p[i] = cv::saturate_cast<uchar>(pow(i / 255.0, 0.5) * 255.0);
+	cv::Mat res = img.clone();
+	LUT(img, lookUpTable, res);
+
+	cv::imwrite("render-img.png", img);
+	cv::imwrite("render-res.png", res);
 
 	// dWindow(windowName);
 	return 0;

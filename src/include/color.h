@@ -9,10 +9,6 @@ void changePixelColor(cv::Vec3d &pixel, cv::Vec3d &colors)
 	auto g = colors[1];
 	auto b = colors[2];
 
-	r = sqrt(r);
-	g = sqrt(g);
-	b = sqrt(b);
-
 	// Write the translated [0,255] value of each color component.
 	pixel[2] = static_cast<double>(r);
 	pixel[1] = static_cast<double>(g);
@@ -24,11 +20,6 @@ void addPixelColor(cv::Vec3d &pixel, cv::Vec3d &colors)
 	auto r = colors[0];
 	auto g = colors[1];
 	auto b = colors[2];
-
-	// Divide the color by the number of samples.
-	r = sqrt(r);
-	g = sqrt(g);
-	b = sqrt(b);
 
 	// Write the translated [0,255] value of each color component.
 	pixel[2] += static_cast<double>(r);
