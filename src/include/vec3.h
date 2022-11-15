@@ -50,7 +50,7 @@ public:
 	static vec3 cross(const vec3 &u, const vec3 &v);
 	static vec3 unit_vector(vec3 v);
 	static vec3 random_in_unit_sphere();
-	static vec3 random_in_hemisphere(const vec3 &normal);
+	static vec3 random_in_hemisphere(const vec3 &normal, const vec3 &to_light);
 
 public:
 	double e[3];

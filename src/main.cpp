@@ -90,19 +90,15 @@ void render()
 {
 
 	// Texture
-	auto material_center1 = make_shared<defuse>(cv::Vec3d(1, 0, 0));
-	auto material_center2 = make_shared<defuse>(cv::Vec3d(0, 1, 0));
-	auto material_center3 = make_shared<defuse>(cv::Vec3d(0, 0, 1));
-	auto material_center4 = make_shared<defuse>(cv::Vec3d(0.1, 0.1, 0.1));
-	auto material_ground = make_shared<defuse_light>(cv::Vec3d(1, 0.75, 0.75) * 10);
+	auto material_sphere = make_shared<defuse>(cv::Vec3d(1, 1, 0));
+	auto material_ground = make_shared<defuse>(cv::Vec3d(0.1, 0.1, 0.1));
+	auto material_light = make_shared<defuse_light>(cv::Vec3d(1, 1, 1) * 1);
 
 	// Object
-	world.add(make_shared<sphere>(cv::Vec3d(0, -1000.25, 0), 1000, material_center4));
+	world.add(make_shared<sphere>(cv::Vec3d(0, -1000.25, 0), 1000, material_ground));
 
-	world.add(make_shared<sphere>(cv::Vec3d(0.25, 0, -1), 0.10, material_ground));
-	world.add(make_shared<sphere>(cv::Vec3d(-0.25, 0, -1), 0.24, material_center2));
-	// world.add(make_shared<sphere>(cv::Vec3d(1, 0.5, -5), 0.01, material_center3));
-	// world.add(make_shared<triangle>(cv::Vec3f(0.5, 0, 1), cv::Vec3f(-0.5, 0, 1), cv::Vec3f(0, 0.5, -5), material_ground));
+	world.add(make_shared<sphere>(cv::Vec3d(0, 5, 0), 2, material_light));
+	world.add(make_shared<sphere>(cv::Vec3d(0, 0, -1), 0.24, material_sphere));
 
 	if (thread)
 	{
@@ -146,11 +142,15 @@ void renderLoop(int name)
 			}
 		}
 		if (!(sampleN % printN))
+		{
 			std::cout << "\nRemaining time for " << name << ": " << sampleN << '/' << samples_per_pixel << "\t" << std::flush;
+			m_image.lock();
+			img += t_img;
+			cv::imshow(windowName, img / (sampleN * thread)); // Show our image inside the created window.
+			cv::waitKey(5);
+			m_image.unlock();
+		}
 	}
-	m_image.lock();
-	img += t_img;
-	m_image.unlock();
 }
 
 void cWindow(cv::String windowName)

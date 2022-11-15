@@ -18,10 +18,10 @@ const double infinity = std::numeric_limits<double>::infinity();
 const double pi = 3.1415926535897932385;
 
 // Image
-const auto aspect_ratio = 4.0 / 3.0;
-const int image_width = 640 * 3;
+const auto aspect_ratio = 6.0 / 4.0;
+const int image_width = 640;
 const int image_height = static_cast<int>(image_width / aspect_ratio);
-const int max_depth = 128;
+const int max_depth = 8;
 
 // Utility Functions
 
@@ -32,9 +32,10 @@ inline double degrees_to_radians(double degrees)
 
 inline double random_double()
 {
+    static std::random_device rd;
+    static std::mt19937_64 mt(rd());
     static std::uniform_real_distribution<double> distribution(0.0, 1.0);
-    static std::default_random_engine generator;
-    return distribution(generator);
+    return distribution(mt);
 }
 
 inline double random_double(double min, double max)

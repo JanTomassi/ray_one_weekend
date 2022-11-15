@@ -1,3 +1,4 @@
+#include <opencv2/opencv.hpp>
 #include "vec3.h"
 
 inline double vec3::length() const
@@ -42,11 +43,21 @@ vec3 vec3::random_in_unit_sphere()
 	auto p = vec3::random(-1, 1);
 	return unit_vector(p);
 }
-vec3 vec3::random_in_hemisphere(const vec3 &normal)
+
+vec3 vec3::random_in_hemisphere(const vec3 &normal, const vec3 &to_light)
 {
-	vec3 in_unit_sphere = vec3::random_in_unit_sphere();
-	if (vec3::dot(in_unit_sphere, normal) > 0.0) // In the same hemisphere as the normal
-		return in_unit_sphere;
+	vec3 result;
+	if (random_double(0, 1) <= 0.0)
+	{
+		result = to_light;
+	}
 	else
-		return -in_unit_sphere;
+	{
+		result = vec3::random_in_unit_sphere();
+	}
+
+	if (vec3::dot(result, normal) > 0.0)
+		return result;
+	else
+		return -result;
 }
