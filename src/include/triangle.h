@@ -1,26 +1,28 @@
 #pragma once
 
-#include "vec3.h"
+#include <glm/glm.hpp>
+#include <memory>
+
 #include "hittable.h"
-#include <opencv2/opencv.hpp>
 
-class triangle : public hittable
-{
+class triangle : public hittable {
 public:
-    triangle(cv::Vec3f v0, cv::Vec3f v1, cv::Vec3f v2, shared_ptr<material> m);
+  triangle(glm::vec3 v0, glm::vec3 v1, glm::vec3 v2,
+           std::shared_ptr<material> m);
 
-    virtual bool hit(const ray &r, double t_min, double t_max, hit_record &rec) const override;
+  virtual bool hit(const ray &r, double t_min, double t_max,
+                   hit_record &rec) const override;
 
 private:
-    cv::Vec3f v0;
-    cv::Vec3f v1;
-    cv::Vec3f v2;
+  glm::dvec3 v0;
+  glm::dvec3 v1;
+  glm::dvec3 v2;
 
-    cv::Vec3f edge0;
-    cv::Vec3f edge1;
-    cv::Vec3f edge2;
+  glm::dvec3 edge0;
+  glm::dvec3 edge1;
+  glm::dvec3 edge2;
 
-    cv::Vec3f normal;
+  glm::dvec3 normal;
 
-    shared_ptr<material> mat_ptr;
+  std::shared_ptr<material> mat_ptr;
 };

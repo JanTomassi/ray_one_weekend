@@ -1,18 +1,20 @@
 #pragma once
 
-#include "vec3.h"
+#include <memory>
+
 #include "hittable.h"
 
-class sphere : public hittable
-{
+class sphere : public hittable {
 public:
-    sphere(){};
-    sphere(cv::Vec3d cen, double r, shared_ptr<material> m) : center(cen), radius(r), mat_ptr(m){};
+  sphere(){};
+  sphere(glm::vec3 cen, double r, std::shared_ptr<material> m)
+      : center(cen), radius(r), mat_ptr(m){};
 
-    virtual bool hit(const ray &r, double t_min, double t_max, hit_record &rec) const override;
+  virtual bool hit(const ray &r, double t_min, double t_max,
+                   hit_record &rec) const override;
 
 public:
-    cv::Vec3d center;
-    double radius;
-    shared_ptr<material> mat_ptr;
+  glm::dvec3 center;
+  float radius;
+  std::shared_ptr<material> mat_ptr;
 };

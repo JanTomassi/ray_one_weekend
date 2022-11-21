@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.6)
 project( DisplayImage )
-add_definitions("-std=c++11 -g -O3")
+add_definitions("-std=c++11 -g -O3 -Wall --pedantic-errors -march=native")
 set(CMAKE_EXPORT_COMPILE_COMMANDS true)
 
 set(HEADER_DIR src/include/)
 set(SRC_DIR src/)
-set(SOURCES ${SRC_DIR}/vec3.cpp 
+set(SOURCES
 	${SRC_DIR}/main.cpp 
 	${SRC_DIR}/triangle.cpp
 	${SRC_DIR}/sphere.cpp
@@ -19,7 +19,6 @@ set(SOURCES ${SRC_DIR}/vec3.cpp
 	${HEADER_DIR}/ray.h
 	${HEADER_DIR}/rtweek.h
 	${HEADER_DIR}/sphere.h
-	${HEADER_DIR}/vec3.h
 	${HEADER_DIR}/triangle.h
 	${HEADER_DIR}/defuse_light.h
 	)

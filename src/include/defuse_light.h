@@ -1,18 +1,20 @@
 #pragma once
-#include "material.h"
+
+#include <glm/glm.hpp>
+
 #include "hittable.h"
+#include "material.h"
 
-class defuse_light : virtual public material
-{
+class defuse_light : virtual public material {
 public:
-    defuse_light(const cv::Vec3d &a) : emit(a){};
+  defuse_light(const glm::vec3 &a) : emit(a){};
 
-    virtual bool scatter(const ray &ray_in, const hit_record &rec, cv::Vec3d &attenuation, ray &scattered) const override
-    {
-        return false;
-    };
+  virtual bool scatter(const ray &ray_in, const hit_record &rec,
+                       glm::vec3 &attenuation, ray &scattered) const override {
+    return false;
+  };
 
-    virtual cv::Vec3d emitted() const { return emit; }
+  virtual glm::vec3 emitted() const override { return emit; }
 
-    cv::Vec3d emit;
+  glm::vec3 emit;
 };

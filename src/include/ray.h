@@ -1,29 +1,21 @@
 #ifndef RAY_H
 #define RAY_H
 
-#include <opencv2/opencv.hpp>
-#include "vec3.h"
+#include <glm/glm.hpp>
 
-class ray
-{
+class ray {
 public:
-    ray() {}
-    ray(const point3 &origin, const vec3 &direction)
-        : orig(origin), dir(direction)
-    {
-    }
+  ray() {}
+  ray(const glm::vec3 &origin, const glm::vec3 &direction)
+      : orig(origin), dir(direction) {}
 
-    inline point3 origin() const { return orig; }
-    inline vec3 direction() const { return dir; }
-    inline cv::Vec3d directionOPEN() const { return cv::Vec3d(dir.x(), dir.y(), dir.z()); }
+  inline glm::dvec3 origin() const { return orig; }
+  inline glm::dvec3 direction() const { return dir; }
 
-    point3 at(double t) const
-    {
-        return orig + t * dir;
-    }
+  glm::dvec3 at(double t) const { return orig + t * dir; }
 
-    point3 orig;
-    vec3 dir;
+  glm::dvec3 orig;
+  glm::dvec3 dir;
 };
 
 #endif

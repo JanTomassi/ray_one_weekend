@@ -1,41 +1,40 @@
 #pragma once
 
-#include "vec3.h"
 #include "hittable.h"
+#include <opencv2/opencv.hpp>
 
-class inf_plane : public hittable
-{
+class inf_plane : public hittable {
 public:
-	inf_plane(){};
-	inf_plane(cv::Vec3d cen, cv::Vec3d n, shared_ptr<material> m) : center(cen), plane_normal(n), mat_ptr(m){};
+  inf_plane(){};
+  inf_plane(glm::vec3 cen, glm::vec3 n, std::shared_ptr<material> m)
+      : center(cen), plane_normal(n), mat_ptr(m){};
 
-	virtual bool hit(
-		const ray &r, double t_min, double t_max, hit_record &rec) const override;
+  virtual bool hit(const ray &r, double t_min, double t_max,
+                   hit_record &rec) const override;
 
 public:
-	cv::Vec3d center;
-	cv::Vec3d plane_normal;
-	shared_ptr<material> mat_ptr;
+  glm::vec3 center;
+  glm::vec3 plane_normal;
+  std::shared_ptr<material> mat_ptr;
 };
 
-bool inf_plane::hit(const ray &r, double t_min, double t_max, hit_record &rec) const
-{
-	vec3 ray_dir = vec3::unit_vector(r.direction());
-	vec3 plane_vector = vec3(center[0], center[1], center[2]) + vec3(plane_normal[0], plane_normal[1], plane_normal[2]);
-	double numerator = vec3::dot(vec3(center[0], center[1], center[2]), vec3(plane_normal[0], plane_normal[1], plane_normal[2]));
-	double denumerator = vec3::dot(ray_dir, plane_vector);
-	double distance = numerator / denumerator;
+inline bool inf_plane::hit(const ray &r, double t_min, double t_max,
+                           hit_record &rec) const {
+  glm::vec3 ray_dir = glm::normalize(r.direction());
+  glm::vec3 plane_vector = center + plane_normal;
+  float numerator = glm::dot(center, plane_normal);
+  float denumerator = glm::dot(ray_dir, plane_vector);
+  float distance = numerator / denumerator;
 
-	if (distance < t_min || t_max < distance)
-	{
-		return false;
-	}
+  if (distance < t_min || t_max < distance) {
+    return false;
+  }
 
-	rec.t = distance;
-	rec.p = r.at(rec.t);
-	// vec3 outward_normal = (rec.p - center) / radius;
-	rec.set_face_normal(r, vec3(plane_normal[0], plane_normal[1], plane_normal[2]));
-	rec.mat_ptr = mat_ptr;
+  rec.t = distance;
+  rec.p = r.at(rec.t);
+  // vec3 outward_normal = (rec.p - center) / radius;
+  rec.set_face_normal(r, plane_normal);
+  rec.mat_ptr = mat_ptr;
 
-	return true;
+  return true;
 }
