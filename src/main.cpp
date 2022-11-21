@@ -112,11 +112,7 @@ void render() {
                                      material_ground));
 
   world.add(std::make_shared<sphere>(glm::vec3(0, 3, 0), 1, material_light));
-  // world.add(std::make_shared<sphere>(glm::vec3(0, 1, 0), 1,
-  // material_simple));
 
-  // world.add(std::make_shared<sphere>(glm::vec3(0, 10, 0), 5,
-  // material_simple));
   addTeaPot(material_tea_pot);
 
   if (thread) {
@@ -149,6 +145,7 @@ void renderLoop(int name) {
         glm::vec3 pixel_color = ray_color(r, world, max_depth);
         cv::Vec3d &point = t_img.at<cv::Vec3d>(i, j);
 
+<<<<<<< HEAD
         addPixelColor(point, pixel_color);
       }
     }
@@ -162,6 +159,23 @@ void renderLoop(int name) {
       m_image.unlock();
     }
   }
+=======
+        addPixelColor(point, pixel_color);
+      }
+    }
+    if (!(sampleN % printN)) {
+      std::cout << "\nRemaining time for " << name << ": " << sampleN << '/'
+                << samples_per_pixel << "\t" << std::flush;
+      m_image.lock();
+      img += t_img;
+      cv::imshow(windowName,
+                 img / (sampleN *
+                        thread)); // Show our image inside the created window.
+      cv::waitKey(5);
+      m_image.unlock();
+    }
+  }
+>>>>>>> PointLight
 }
 
 void cWindow(cv::String windowName) {
